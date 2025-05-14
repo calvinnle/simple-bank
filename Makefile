@@ -22,4 +22,7 @@ migratedown:
 psql:
 	docker exec -it simple_bank_db psql
 
-.PHONY: postgres createdb dropdb startdb stopdb psql migratedown migrateup
+sqlc:
+	sqlc generate
+
+.PHONY: postgres createdb dropdb startdb stopdb psql migratedown migrateup sqlc
