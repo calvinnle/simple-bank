@@ -12,8 +12,14 @@ startdb:
 
 stopdb:
 	docker stop simple_bank_db
+
+migrateup:
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 	
+migratedown:
+	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+
 psql:
 	docker exec -it simple_bank_db psql
 
-.PHONY: postgres createdb dropdb startdb stopdb psql
+.PHONY: postgres createdb dropdb startdb stopdb psql migratedown migrateup
