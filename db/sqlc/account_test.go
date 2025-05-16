@@ -55,8 +55,8 @@ func TestGetAccount(t *testing.T) {
 func TestUpdateAccount(t *testing.T) {
 	account1 := createRandomAccount(t)
 
-	arg := UpdateAccountParams {
-		ID: account1.ID,
+	arg := UpdateAccountParams{
+		ID:      account1.ID,
 		Balance: util.RandomMoney(),
 	}
 
@@ -68,7 +68,7 @@ func TestUpdateAccount(t *testing.T) {
 	assert.Equal(t, account1.Currency, account2.Currency)
 	assert.Equal(t, arg.Balance, account2.Balance)
 	assert.Equal(t, account1.Owner, account2.Owner)
-	
+
 	assert.WithinDuration(t, account1.CreatedAt, account2.CreatedAt, time.Second)
 }
 
@@ -82,4 +82,23 @@ func TestDeleteAccount(t *testing.T) {
 	assert.Error(t, err)
 	assert.EqualError(t, err, sql.ErrNoRows.Error())
 	assert.Empty(t, account2)
+}
+
+func TestListAccounts(t *testing.T) {
+	for range 10 {
+		createRandomAccount(t)
+	}
+
+	arg := ListAccountsParams{
+		Limit:  5,
+		Offset: 5,
+	}
+
+	accounts, err := testQueries.ListAccounts(context.Background(), arg)
+	assert.NoError(t, err)
+	assert.Len(t, accounts, 5)
+
+	for _, account := range accounts {
+		assert.NotEmpty(t, account)
+	}
 }
